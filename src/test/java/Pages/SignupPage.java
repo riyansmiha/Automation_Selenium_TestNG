@@ -1,164 +1,198 @@
 package Pages;
 
+import Utils.Utils;
+import org.json.simple.parser.ParseException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.Select;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SignupPage {
-    @FindBy(id = "email_create")
+    @FindBy(name = "email_create")
     WebElement txtRegEmail;
-
-    @FindBy(xpath = "//li[contains(text(),'Invalid email address.')]")
-    WebElement lblErrorMsg;
-
-    @FindBy(xpath = "//li[contains(text(),'An account using this email address has already been registered. Please enter a valid password or request a new one. ')]")
-    WebElement lblErrorAuthMsg;
-
-    @FindBy(xpath = "//li[contains(text(),' is invalid.')]")
-    List<WebElement> lblErrorMsgLastname;
-
-    @FindBy(xpath = "//li[contains(text(),' is invalid.')]")
-    List<WebElement> lblErrorMsgFirstname;
-
-    @FindBy(xpath = "//li[contains(text(),' is invalid.')]")
-    List<WebElement> lblErrorMsgPassword;
-
-    @FindBy(xpath = "//li[contains(text(),' is invalid.')]")
-    List<WebElement> lblErrorMsgZipCode;
-
-    @FindBy(xpath = "//li[contains(text(),'The Zip/Postal code you've entered is invalid. It must follow this format: 00000')]")
-    WebElement lblErrorMsgBlankPostCode;
-
-    @FindBy(xpath = "//li[contains(text(),'You must register at least one phone number.')]")
-    WebElement lblErrorMsgPhnNo;
-
-    @FindBy(xpath = "//li[contains(text(),' is required.')]")
-    List<WebElement> lblErrorMsgAddress1;
-
-    @FindBy(xpath = "//li[contains(text(),' is required.')]")
-    List<WebElement> lblErrorMsgCity;
-
-    @FindBy(xpath="//li[contains(text(),'Country is invalid')]")
-    WebElement lblErrorMsgCountry;
-
-    @FindBy(xpath = "//li[contains(text(),'This country requires you to choose a State.')]")
-    WebElement lblErrorMsgState;
-
-    @FindBy(xpath = "//li[contains(text(),' is required.')]")
-    List<WebElement> lblErrorMsgAlias;
-    @FindBy(id="SubmitCreate")
-    WebElement btnSignup;
-    @FindBy(id="id_gender2")
+    @FindBy(css = "[type=submit]")
+    List<WebElement> btnSignup;
+    @FindBy(id = "id_gender1")
     WebElement rb1;
-    @FindBy(id="customer_firstname")
-    WebElement txtFirstName;
-    @FindBy(id="customer_lastname")
+    @FindBy(id = "customer_firstname")
+    public WebElement txtFirstName;
+    @FindBy(id = "customer_lastname")
     WebElement txtLastName;
-    @FindBy(id="passwd")
-    WebElement txtPassWord;
-    @FindBy(id="days")
+    @FindBy(id = "passwd")
+    WebElement txtPassword;
+    @FindBy(id = "days")
     WebElement cbDays;
-    @FindBy(id="months")
+    @FindBy(id = "months")
     WebElement cbMonths;
-    @FindBy(id="years")
+    @FindBy(id = "years")
     WebElement cbYears;
-    @FindBy(id="address1")
+    @FindBy(id = "address1")
     WebElement txtAddress1;
-    @FindBy(id="city")
+    @FindBy(id = "city")
     WebElement txtCity;
-    @FindBy(id="id_state")
+    @FindBy(id = "id_state")
     WebElement cbState;
-    @FindBy(id="postcode")
+    @FindBy(id = "postcode")
     WebElement txtPostCode;
-    @FindBy(id="id_country")
-    WebElement cbCountry;
-    @FindBy(id="phone_mobile")
+    @FindBy(id = "phone_mobile")
     WebElement txtMobile;
-    @FindBy(id="alias")
-    WebElement txtReferenceAddress;
-    @FindBy(id="submitAccount")
-    WebElement btnRegister;
-
+    @FindBy(id = "submitAccount")
+    public WebElement regButton;
+    @FindBy(className = "account")
+    public WebElement userAccountName;
+    @FindBy(className = "page-heading")
+    public WebElement pageHeading;
+    @FindBy(css = "[title=Home]")
+    public WebElement btnHome;
+    @FindBy(className = "logout")
+    public WebElement btnLogOut;
+    @FindBy(xpath = "//li[contains(text(),'An account using this email address has already be')]")
+    public WebElement msgAlreadyRegistered;
+    @FindBy(xpath = "//li[contains(text(),'You must register at least one phone number.')]")
+    public WebElement OnePhoneNumber;
+    @FindBy(xpath = "//li[contains(text(),' is invalid.')]")
+    public List<WebElement> errorMessages;
+    @FindBy(xpath = "//li[contains(text(),\"The Zip/Postal code you've entered is invalid. It \")]")
+    public WebElement invalidZipCodeMsg;
+    @FindBy(xpath = "//h1[contains(text(),'Create an account')]")
+    public WebElement txtcreateAccount;
+    @FindBy(xpath = "//p[contains(text(),'There are 8 errors')]")
+    public WebElement totalErrors;
+    @FindBy(xpath = "//li[contains(text(),' is invalid')]")
+    public List<WebElement> errorPassmsg;
+    @FindBy(xpath = "//h1[contains(text(),'My account')]")
+    public WebElement signUpSuccesful;
     WebDriver driver;
-    public  SignupPage(WebDriver driver)
+
+
+
+    public SignupPage(WebDriver driver)
     {
-        this.driver=driver;
-        PageFactory.initElements(driver,this);
+        this.driver = driver;
+        PageFactory.initElements(driver, this);
     }
+    Utils utils = new Utils();
+    String password = utils.generateRandomPassword(8);
+    String email;
+    String mobile;
+    public String firstName = "Test" + ((char) utils.generateRandomNumber(65, 123));
 
-    public void doRegistration(String email,String password,String mobile) throws InterruptedException {
-        txtRegEmail.sendKeys(email);
-        btnSignup.click();
-        Thread.sleep(3000);
-        rb1.click();
-        txtFirstName.sendKeys("Test");
-        txtLastName.sendKeys("User");
-        txtPassWord.sendKeys(password);
-        Select days=new Select(cbDays);
-        days.selectByValue("1");
-        Select months=new Select(cbMonths);
-        months.selectByValue("1");
-        Select years=new Select(cbYears);
-        years.selectByValue("2000");
-        txtAddress1.sendKeys("1 Wasington Road, Newyork");
-        txtCity.sendKeys("Newyork");
-        Select state=new Select(cbState);
-        state.selectByValue("32");
-        txtPostCode.sendKeys("75201");
-        Select country=new Select(cbCountry);
-        country.selectByValue("21");
-        txtMobile.sendKeys(mobile);
-        txtReferenceAddress.sendKeys("Dallas");
-        btnRegister.click();
+    //after giving valid email for signup register form will appear
+    public void validEmailRegisterForm(String email) throws InterruptedException {
         Thread.sleep(1000);
+        txtRegEmail.clear();
+        txtRegEmail.sendKeys(email);
+        this.email = email;
+        btnSignup.get(1).click();
+        Thread.sleep(1200);
     }
 
-
-    public String doSignupWithInvalidEmail(String email)  {
+    public String alreadyRegisteredEmail(String email) throws InterruptedException {
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.linkLogin.click();
+        Thread.sleep(1000);
         txtRegEmail.sendKeys(email);
-        btnSignup.click();
-        String errorMsg=lblErrorMsg.getText();
-        return  errorMsg;
-
+        btnSignup.get(1).click();
+        Thread.sleep(2000);
+        return msgAlreadyRegistered.getText();
     }
+    //
+    public void EmptyInfoReg(){
 
-    public String doSignupWithAlreadyUsedEmail(String email) {
-        txtRegEmail.sendKeys(email);
-        btnSignup.click();
-        String errorMsg=lblErrorAuthMsg.getText();
-        return  errorMsg;
-
+        regButton.click();
     }
-    public String doSignupWithInvalidPhnno(String email,String password,String mobile) throws InterruptedException {
-        txtRegEmail.sendKeys(email);
-        btnSignup.click();
-        Thread.sleep(3000);
+    //
+    public List<String> invalidFirstandLastName() throws InterruptedException {
         rb1.click();
-        txtFirstName.sendKeys("Test");
-        txtLastName.sendKeys("User");
-        txtPassWord.sendKeys(password);
-        Select days=new Select(cbDays);
-        days.selectByValue("1");
-        Select months=new Select(cbMonths);
-        months.selectByValue("1");
-        Select years=new Select(cbYears);
-        years.selectByValue("2000");
-        txtAddress1.sendKeys("1 Wasington Road, Newyork");
-        txtCity.sendKeys("Newyork");
-        Select state=new Select(cbState);
-        state.selectByValue("32");
-        txtPostCode.sendKeys("75201");
-        Select country=new Select(cbCountry);
-        country.selectByValue("21");
+        Thread.sleep(1000);
+        txtFirstName.sendKeys("Test" + (utils.generateRandomNumber(1, 1000)));
+        Thread.sleep(1000);
+        txtLastName.sendKeys("User" + (utils.generateRandomNumber(1, 1000)));
+        Thread.sleep(1200);
+        regButton.click();
+        List<String> invalidName = new ArrayList<>();
+        invalidName.add(errorMessages.get(1).getText());
+        invalidName.add(errorMessages.get(0).getText());
+        // rectifying first and last name
+        Thread.sleep(1000);
+        txtFirstName.clear();
+        Thread.sleep(1000);
+        txtLastName.clear();
+        Thread.sleep(1000);
+        txtFirstName.sendKeys(firstName);
+        Thread.sleep(1000);
+        txtLastName.sendKeys("user");
+        return invalidName;
+//        txtRegEmail.sendKeys(email);
+//        return invalidName;
+    }
+    //
+    public String invalidPasswordCheck() throws InterruptedException {
+        Thread.sleep(500);
+//        rb1.click();
+//        txtFirstName.sendKeys(firstName);
+//        Thread.sleep(500);
+//       txtLastName.sendKeys("user");
+//        txtRegEmail.sendKeys(email);
+
+        txtPassword.sendKeys("5469");
+        Thread.sleep(1000);
+        regButton.click();
+        Thread.sleep(1200);
+        String invalidPasswordMessage = errorPassmsg.get(0).getText();
+        //rectifying password
+        Thread.sleep(1300);
+        return invalidPasswordMessage;
+    }
+    //
+    public String invalidZipCode() throws InterruptedException {
+        Thread.sleep(1000);
+        //giving valid password
+        txtPassword.sendKeys(password);
+        Thread.sleep(1000);
+        //giving address
+        txtAddress1.sendKeys("East Nasirabad,Chittagong");
+        Thread.sleep(1000);
+        //giving city
+        txtCity.sendKeys("Chittagong");
+        Thread.sleep(1000);
+        //selecting states
+        Select state = new Select(cbState);
+        state.selectByValue("27");
+        Thread.sleep(1000);
+        txtPostCode.sendKeys(Integer.toString(utils.generateRandomNumber(100000, 50000000)));
+        Thread.sleep(1000);
+        regButton.click();
+        //rectifying zip code
+        Thread.sleep(1000);
+        String invalidZipCodeMessage = invalidZipCodeMsg.getText();
+        Thread.sleep(1000);
+        txtPostCode.clear();
+        Thread.sleep(1000);
+        txtPostCode.sendKeys("0001" + utils.generateRandomNumber(1, 10));
+        Thread.sleep(1000);
+        return invalidZipCodeMessage;
+    }
+
+    public String OneMobileNum(){
+        regButton.click();
+        String mobNumError= OnePhoneNumber.getText();
+//        txtMobile.sendKeys(mobile);
+
+        return mobNumError;
+    }
+    public String finalSignUp(String mobile){
+        txtPassword.sendKeys(password);
         txtMobile.sendKeys(mobile);
-        txtReferenceAddress.sendKeys("Dallas");
-        btnRegister.click();
-        String errorMsg=lblErrorMsgPhnNo.getText();
-        return errorMsg;
+        regButton.click();
+        String signUpmsg = signUpSuccesful.getText();
+        return signUpmsg;
+
     }
 
 }
